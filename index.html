@@ -1,0 +1,292 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Uso responsable de la IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: cartelera de aula. Encabezado con tesis, franja de agenda proporcional a los minutos, tres capas normativas en pestañas, semáforo de casos. */
+:root{
+  --bg:#F2F5F7; --surface:#FFFFFF; --ink:#13202B; --muted:#56687A; --line:#D3DBE2;
+  --accent:#0D6B75; --accent-soft:#DCEFF1; --accent-ink:#FFFFFF;
+  --go:#1E8449; --go-soft:#DDF1E4; --warn:#9A6A00; --warn-soft:#FBEFCB; --stop:#B93A2E; --stop-soft:#F9DEDA;
+  --f-display:"Bricolage Grotesque","Trebuchet MS",sans-serif;
+  --f-body:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0E1820; --surface:#16232E; --ink:#E7EEF3; --muted:#93A5B4; --line:#2A3B49;
+  --accent:#4FC4CE; --accent-soft:#12343A; --accent-ink:#0E1820;
+  --go:#5FCB8A; --go-soft:#12321F; --warn:#E9B949; --warn-soft:#3A2F0F; --stop:#F0877B; --stop-soft:#3B1B18; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1820; --surface:#16232E; --ink:#E7EEF3; --muted:#93A5B4; --line:#2A3B49;
+  --accent:#4FC4CE; --accent-soft:#12343A; --accent-ink:#0E1820;
+  --go:#5FCB8A; --go-soft:#12321F; --warn:#E9B949; --warn-soft:#3A2F0F; --stop:#F0877B; --stop-soft:#3B1B18; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.55;padding-inline:clamp(16px,4vw,48px);padding-block:32px 64px}
+.wrap{max-width:1040px;margin-inline:auto;display:flex;flex-direction:column;gap:56px}
+h1,h2,h3{font-family:var(--f-display);line-height:1.1;text-wrap:balance;margin:0}
+h1{font-size:clamp(2.1rem,6vw,3.7rem);font-weight:700;letter-spacing:-.02em}
+h2{font-size:clamp(1.5rem,3.6vw,2.1rem);font-weight:700;letter-spacing:-.01em}
+h3{font-size:1.15rem;font-weight:700}
+p{margin:0}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;color:var(--accent)}
+.lede{color:var(--muted);max-width:62ch;font-size:1.08rem}
+header{display:flex;flex-direction:column;gap:18px}
+.meta{display:flex;flex-wrap:wrap;gap:10px 22px;font-family:var(--f-mono);font-size:.85rem;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:500}
+section{display:flex;flex-direction:column;gap:22px;min-width:0}
+.sec-head{display:flex;flex-direction:column;gap:8px}
+
+/* agenda */
+.bar{display:flex;height:16px;border-radius:4px;overflow:hidden;gap:2px}
+.bar span{display:block;background:var(--accent);opacity:.9}
+.bar span:nth-child(even){opacity:.5}
+.agenda{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.agenda li{display:grid;grid-template-columns:8.5rem 1fr auto;gap:6px 16px;align-items:baseline;padding:13px 0;border-bottom:1px solid var(--line)}
+.agenda .t{font-family:var(--f-mono);font-size:.85rem;color:var(--muted)}
+.agenda .n{font-weight:600}
+.agenda .n small{display:block;font-weight:400;color:var(--muted);font-size:.93rem}
+.tag{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--line);border-radius:3px;padding:2px 7px;color:var(--muted);white-space:nowrap}
+.tag.live{border-color:var(--accent);color:var(--accent)}
+@media (max-width:620px){.agenda li{grid-template-columns:1fr auto}.agenda .t{grid-column:1/-1}}
+
+/* tabs */
+[role=tablist]{display:flex;flex-wrap:wrap;gap:8px}
+[role=tab]{font:inherit;font-weight:600;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:6px;padding:10px 16px;cursor:pointer}
+[role=tab][aria-selected=true]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+[role=tab]:hover:not([aria-selected=true]){border-color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.panel{display:flex;flex-direction:column;gap:22px;min-width:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card .top{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.card .yr{font-family:var(--f-mono);font-size:.82rem;color:var(--muted)}
+.card p{color:var(--muted);font-size:.98rem}
+.ask{margin-top:auto;padding-top:10px;border-top:1px dashed var(--line);font-size:.95rem;color:var(--ink)}
+.ask b{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:2px;font-weight:500}
+.badge{font-family:var(--f-mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:3px}
+.badge.bind{background:var(--stop-soft);color:var(--stop)}
+.badge.soft{background:var(--accent-soft);color:var(--accent)}
+.badge.wip{background:var(--warn-soft);color:var(--warn)}
+
+/* pyramid */
+.pyr{display:flex;flex-direction:column;gap:6px}
+.pyr div{padding:12px 16px;border-radius:6px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline}
+.pyr strong{font-family:var(--f-display)}
+.pyr span{font-size:.93rem}
+.p1{background:var(--stop-soft);color:var(--stop);width:56%}
+.p2{background:var(--warn-soft);color:var(--warn);width:72%}
+.p3{background:var(--accent-soft);color:var(--accent);width:88%}
+.p4{background:var(--go-soft);color:var(--go);width:100%}
+@media (max-width:620px){.pyr div{width:100%!important}}
+.pyr span{color:var(--ink)}
+
+/* timeline */
+.tl{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:12px}
+.tl li{border-top:3px solid var(--accent);padding-top:10px;font-size:.93rem;color:var(--muted)}
+.tl li.future{border-top-style:dashed}
+.tl b{display:block;font-family:var(--f-mono);font-weight:500;color:var(--ink);font-size:.85rem;margin-bottom:2px}
+
+ul.plain{margin:0;padding-left:1.15rem;color:var(--muted);font-size:.98rem;display:flex;flex-direction:column;gap:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips span{font-family:var(--f-mono);font-size:.82rem;border:1px solid var(--accent);color:var(--accent);background:var(--accent-soft);border-radius:4px;padding:5px 10px}
+.pending{border:2px dashed var(--warn);background:var(--warn-soft);border-radius:8px;padding:18px 20px;display:flex;flex-direction:column;gap:8px}
+.pending h3{color:var(--warn)}
+.pending ul{margin:0;padding-left:1.2rem;color:var(--ink)}
+
+/* cases */
+.case{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px 20px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.case .q{font-weight:600}
+.case .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.case button.rev{font:inherit;font-size:.92rem;font-weight:600;background:transparent;color:var(--accent);border:1px solid var(--accent);border-radius:6px;padding:7px 14px;cursor:pointer}
+.case button.rev:hover{background:var(--accent-soft)}
+.res{display:flex;flex-direction:column;gap:4px;border-radius:6px;padding:12px 14px;font-size:.96rem}
+.res b{font-family:var(--f-display)}
+.res.go{background:var(--go-soft);color:var(--ink)} .res.go b{color:var(--go)}
+.res.warn{background:var(--warn-soft);color:var(--ink)} .res.warn b{color:var(--warn)}
+.res.stop{background:var(--stop-soft);color:var(--ink)} .res.stop b{color:var(--stop)}
+.lights{display:flex;gap:6px}
+.lights i{width:14px;height:14px;border-radius:50%;display:block;border:1px solid var(--line)}
+.lights .g{background:var(--go)}.lights .y{background:var(--warn)}.lights .r{background:var(--stop)}
+
+.kh{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:14px}
+.kh div{border:1px solid var(--line);border-radius:8px;padding:16px;background:var(--surface);display:flex;flex-direction:column;gap:6px}
+.kh .n{font-family:var(--f-mono);font-size:1.7rem;color:var(--accent)}
+footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font-size:.92rem;display:flex;flex-direction:column;gap:10px}
+footer ul{margin:0;padding-left:1.1rem}
+footer a{color:var(--accent)}
+@media (prefers-reduced-motion:no-preference){.panel:not([hidden]){animation:in .25s ease-out}@keyframes in{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">Clase de ingeniería</div>
+  <h1>Uso responsable de la IA</h1>
+  <p class="lede">Qué dicen el mundo, Colombia y la EAN sobre lo que puedes hacer con la inteligencia artificial, y qué te toca decidir a ti cuando ninguna norma te dice nada.</p>
+</header>
+
+<section id="normas">
+  <div class="sec-head"><div class="eyebrow">Tres capas</div><h2>De lo global a lo que aplica en tu aula</h2></div>
+  <div role="tablist" aria-label="Capas normativas">
+    <button role="tab" id="tab-int" aria-controls="p-int" aria-selected="true">Internacional</button>
+    <button role="tab" id="tab-col" aria-controls="p-col" aria-selected="false" tabindex="-1">Colombia</button>
+    <button role="tab" id="tab-ean" aria-controls="p-ean" aria-selected="false" tabindex="-1">EAN</button>
+  </div>
+
+  <div class="panel" id="p-int" role="tabpanel" aria-labelledby="tab-int">
+    <div class="grid">
+      <article class="card"><div class="top"><h3>Recomendación de la UNESCO sobre la Ética de la IA*</h3><span class="yr">2021</span></div>
+        <span class="badge soft">No vinculante</span>
+        <p>Primer marco global adoptado por los Estados miembros. Parte de los derechos humanos, la transparencia, la supervisión humana y la no discriminación.</p>
+        <div class="ask"><b>Para el curso</b>¿Qué significa que un humano supervise una decisión de IA?</div></article>
+      <article class="card"><div class="top"><h3>Principios de IA de la OCDE*</h3><span class="yr">2019, actualizados 2024</span></div>
+        <span class="badge soft">No vinculante</span>
+        <p>Base de muchas leyes nacionales: IA robusta, segura, transparente y con responsables identificables. Colombia es miembro de la OCDE.</p>
+        <div class="ask"><b>Para el curso</b>¿Quién responde cuando la IA se equivoca: quien la hizo o quien la usó?</div></article>
+      <article class="card"><div class="top"><h3>Reglamento de IA de la UE (AI Act)</h3><span class="yr">Reg. (UE) 2024/1689</span></div>
+        <span class="badge bind">Vinculante</span>
+        <p>Primera ley integral del mundo. Regula por nivel de riesgo, con multas de hasta 35 millones de euros en las infracciones más graves. Alcanza a quien ofrezca IA en el mercado europeo.</p>
+        <div class="ask"><b>Para el curso</b>¿Por qué una ley europea puede afectar a una empresa colombiana?</div></article>
+      <article class="card"><div class="top"><h3>Convenio Marco del Consejo de Europa sobre IA*</h3><span class="yr">2024</span></div>
+        <span class="badge bind">Tratado</span>
+        <p>Primer tratado internacional jurídicamente vinculante sobre IA, derechos humanos, democracia y Estado de derecho.</p>
+        <div class="ask"><b>Para el curso</b>¿Un tratado vale más que una recomendación? ¿Por qué?</div></article>
+    </div>
+
+    <h3>El AI Act en una pirámide</h3>
+    <div class="pyr">
+      <div class="p1"><strong>Riesgo inaceptable</strong><span>Prohibido (p. ej. puntuación social)</span></div>
+      <div class="p2"><strong>Alto riesgo</strong><span>Educación, empleo, crédito: exigencias fuertes</span></div>
+      <div class="p3"><strong>Transparencia</strong><span>Chatbots y contenido generado: avisar que es IA</span></div>
+      <div class="p4"><strong>Riesgo mínimo</strong><span>Sin obligaciones específicas</span></div>
+    </div>
+
+    <h3>Fechas que ya pasaron y las que siguen</h3>
+    <ol class="tl">
+      <li><b>1 ago 2024</b>Entra en vigor</li>
+      <li><b>2 feb 2025</b>Prohibiciones y alfabetización en IA</li>
+      <li><b>2 ago 2025</b>Modelos de propósito general</li>
+      <li><b>2 ago 2026</b>Aplicación general y transparencia (art. 50)</li>
+      <li class="future"><b>2 dic 2027</b>Alto riesgo (Anexo III), aplazado por el Ómnibus Digital</li>
+      <li class="future"><b>2 ago 2028</b>Alto riesgo en productos regulados (Anexo I)</li>
+    </ol>
+  </div>
+
+  <div class="panel" id="p-col" role="tabpanel" aria-labelledby="tab-col" hidden>
+    <div class="grid">
+      <article class="card"><div class="top"><h3>Habeas data: Constitución art. 15 y Ley 1581 de 2012*</h3></div>
+        <span class="badge bind">Vinculante hoy</span>
+        <p>Ya aplica a la IA: tus datos personales y los de terceros tienen reglas de autorización y finalidad. La Superintendencia de Industria y Comercio vigila su cumplimiento.</p>
+        <div class="ask"><b>Para el curso</b>¿Qué datos de un compañero o cliente nunca subirías a un chatbot público?</div></article>
+      <article class="card"><div class="top"><h3>Derechos de autor: Ley 23 de 1982*</h3></div>
+        <span class="badge bind">Vinculante hoy</span>
+        <p>Citar, parafrasear y copiar tienen consecuencias también cuando el texto lo produjo una IA a partir de obras ajenas.</p>
+        <div class="ask"><b>Para el curso</b>¿Es tuyo un texto que generó la IA por ti?</div></article>
+      <article class="card"><div class="top"><h3>Política Nacional de IA: CONPES 4144</h3><span class="yr">14 feb 2025</span></div>
+        <span class="badge soft">Política pública</span>
+        <p>Hoja de ruta a 2030 con seis ejes estratégicos y un presupuesto estimado de 479.000 millones de pesos. Orienta al Estado, pero no crea sanciones por sí misma.</p>
+        <div class="ask"><b>Para el curso</b>¿Qué diferencia hay entre una política y una ley?</div></article>
+      <article class="card"><div class="top"><h3>Ley de IA en el Congreso</h3><span class="yr">2026</span></div>
+        <span class="badge wip">En trámite</span>
+        <p>El proyecto del Gobierno anterior (PL 043/2025 Senado) se archivó por tránsito de legislatura. Hoy se tramita el PL 025 de 2026, que replica gran parte de su articulado con enfoque de riesgo, al estilo europeo.</p>
+        <div class="ask"><b>Para el curso</b>¿Prefieres una ley estricta o una que deje innovar? Defiéndelo en 30 segundos.</div></article>
+    </div>
+    <p class="lede">Mensaje clave: Colombia todavía no tiene una ley específica de IA. Lo que sí tiene son leyes generales que ya te obligan y una política que marca la dirección.</p>
+  </div>
+
+  <div class="panel" id="p-ean" role="tabpanel" aria-labelledby="tab-ean" hidden>
+    <article class="card">
+      <div class="top"><h3>Reglamento de Inteligencia Artificial de la Universidad EAN</h3><span class="yr">Acuerdo CSU No. 006 · 24 abr 2025 · v1.0</span></div>
+      <span class="badge bind">Obligatorio</span>
+      <p>Aplica a estudiantes, docentes, colaboradores, egresados y terceros aliados. Permite usar herramientas de IA en actividades académicas, formativas, de investigación y creación, siempre con uso responsable y respeto a la propiedad intelectual y al habeas data de terceros.</p>
+    </article>
+
+    <div class="grid">
+      <article class="card"><h3>Lo que sí puedes hacer</h3>
+        <ul class="plain">
+          <li>Usarla como guía complementaria para aprender un tema.</li>
+          <li>Explorar y analizar datos, o apoyarte para entender código.</li>
+          <li>Generar variantes de una idea inicial, sin tratarla como fuente principal.</li>
+          <li>Traducir apartados cuando el idioma sea una barrera.</li>
+          <li>Usar IA generativa solo con herramientas definidas, avaladas o habilitadas por la Universidad.</li>
+        </ul></article>
+      <article class="card"><h3>Lo que te toca hacer</h3>
+        <ul class="plain">
+          <li>Declarar y referenciar el uso de IA en tu trabajo.</li>
+          <li>Pedirle las fuentes y validar los datos con fuentes confiables.</li>
+          <li>No reemplazar las bases de datos de la Biblioteca por IA.</li>
+          <li>Guardar las versiones de tu trabajo para mostrar la trazabilidad.</li>
+          <li>No hacer pasar por tuyo lo que generó la IA.</li>
+          <li>En código, usarla como apoyo y no para sustituir la lógica que debes producir tú.</li>
+        </ul></article>
+      <article class="card"><h3>Lo que no debes compartir</h3>
+        <p>Datos personales o sensibles (nombres, direcciones, documentos de identidad, datos de contacto), contraseñas, registros financieros e información confidencial de la Universidad. Las herramientas de IA no garantizan la confidencialidad de lo que les entregas.</p>
+        <div class="ask"><b>Para el curso</b>¿Cuál de estas reglas te cuesta más cumplir y por qué?</div></article>
+      <article class="card"><h3>Si lo incumples</h3>
+        <p>Eres el único responsable del uso indebido. Si se demuestra fraude académico o infracción de derechos de terceros, se aplica el proceso disciplinario del Reglamento Estudiantil, el Reglamento Interno de Trabajo o el Reglamento Docente, según el caso.</p></article>
+    </div>
+
+    <h3>Cómo se declara el uso de IA</h3>
+    <p class="lede">Describe el uso en la metodología o en una sección equivalente e incluye el nombre del modelo, su versión, la compañía creadora, el prompt y la fecha. Debe distinguirse tu contribución significativa de lo producido por la IA. Escoge la etiqueta que corresponda:</p>
+    <div class="chips">
+      <span>Revisado con IA</span><span>Redactado con IA</span><span>Corregido con IA</span><span>Traducido con IA</span><span>Desarrollo por IA</span><span>Calificado por IA</span>
+    </div>
+    <p class="lede">La Universidad también creó un Comité de Inteligencia Artificial que orienta el uso ético, dirime conflictos y revisa este reglamento cada tres años.</p>
+  </div>
+</section>
+
+<section id="casos">
+  <div class="sec-head"><div class="eyebrow">Actividad en equipos</div><h2>Semáforo de casos</h2>
+    <p class="lede">Cada equipo lee el caso, vota un color y tiene 30 segundos para defenderlo. Luego se revela la sugerencia, que cita el artículo del reglamento de la EAN.</p>
+    <div class="lights" aria-hidden="true"><i class="g"></i><i class="y"></i><i class="r"></i></div></div>
+  <div id="cases" class="grid"></div>
+</section>
+
+<footer>
+  <div>Los datos marcados con * son de conocimiento general y no se volvieron a verificar en línea.</div>
+  <ul>
+    <li><a href="https://artificialintelligenceact.eu/implementation-timeline/">Calendario de aplicación del AI Act</a></li>
+    <li><a href="https://verifywise.ai/es/blog/eu-ai-act-omnibus-what-changed">Ómnibus Digital: nuevas fechas de alto riesgo</a></li>
+    <li><a href="https://intranet.cali.gov.co/2025/02/20/aprobado-conpes-de-inteligencia-artificial/">Aprobación del CONPES 4144</a></li>
+    <li><a href="https://regulations.ai/regulations/RAI-CO-NA-PNDIAXX-2025">CONPES 4144: alcance y sanciones</a></li>
+    <li><a href="https://www.semana.com/economia/empresas/articulo/mas-controles-o-mas-innovacion-el-dilema-que-abre-la-nueva-ley-de-ia/202600/">Estado del proyecto de ley de IA (Semana, 28 ago 2026)</a></li>
+  </ul>
+</footer>
+</div>
+
+<script>
+(function(){
+  var tabs=[].slice.call(document.querySelectorAll('[role=tab]'));
+  function show(t){tabs.forEach(function(x){var on=x===t;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;document.getElementById(x.getAttribute('aria-controls')).hidden=!on;});}
+  tabs.forEach(function(t,i){
+    t.addEventListener('click',function(){show(t);});
+    t.addEventListener('keydown',function(e){
+      var j=e.key==='ArrowRight'?i+1:e.key==='ArrowLeft'?i-1:null;
+      if(j===null)return; j=(j+tabs.length)%tabs.length; tabs[j].focus(); show(tabs[j]);
+    });
+  });
+
+  var cases=[
+    {q:"Le pides a una IA que te explique un tema que no entendiste y luego lo contrastas con el libro del curso.",c:"go",t:"Verde",w:"Es el uso de guía complementaria que permite el reglamento (art. 5.1). Sigue siendo tuya la tarea de validar lo que dijo (art. 5.3)."},
+    {q:"Entregas un ensayo generado por completo por IA, sin decir nada al docente.",c:"stop",t:"Rojo",w:"El reglamento exige declarar el uso y prohíbe hacer pasar por tuyo lo generado por IA (art. 5.3). Puede llegar a fraude académico (art. 8.1)."},
+    {q:"Pegas en un chatbot público la base de clientes de tu práctica, con cédulas y correos.",c:"stop",t:"Rojo",w:"Son datos personales de terceros. La Ley 1581 exige autorización y finalidad, y el reglamento pide abstenerse de compartirlos (art. 5.3 y 8.2)."},
+    {q:"Usas la IA para mejorar la redacción de tu informe y lo indicas en una nota al pie.",c:"warn",t:"Amarillo",w:"Es un uso válido si lo declaras: entra en las etiquetas «Corregido» o «Redactado con IA», con modelo, versión y fecha (art. 5.4)."},
+    {q:"Pides referencias bibliográficas a la IA y las copias en tu trabajo sin buscarlas.",c:"warn",t:"Amarillo",w:"El reglamento pide validar los datos con fuentes confiables y no reemplazar la Biblioteca (art. 5.3). Cada cita se busca antes de usarla."},
+    {q:"Generas una imagen de un supuesto accidente en la obra y la compartes como si fuera una foto real.",c:"stop",t:"Rojo",w:"Es contenido sintético presentado como real. Viola la transparencia que exige el reglamento y la regulación europea pide avisar cuando algo lo genera una IA."},
+    {q:"Generas el código de un controlador para tu proyecto de mecatrónica, lo entiendes línea por línea y lo pruebas en el banco.",c:"warn",t:"Amarillo",w:"El reglamento admite la IA como apoyo en código, sin sustituir la lógica que debes producir tú (art. 5.3, deber 17). Si no lo entiendes, no es tu trabajo."}
+  ];
+  var box=document.getElementById('cases');
+  cases.forEach(function(k,i){
+    var d=document.createElement('div');d.className='case';
+    d.innerHTML='<span class="eyebrow">Caso '+(i+1)+'</span><p class="q"></p><div class="row"><button class="rev" type="button" aria-expanded="false">Revelar sugerencia</button></div><div class="res '+k.c+'" hidden><b></b><span></span></div>';
+    d.querySelector('.q').textContent=k.q;
+    d.querySelector('b').textContent='Sugerencia: '+k.t;
+    d.querySelector('.res span').textContent=k.w;
+    var b=d.querySelector('button'),r=d.querySelector('.res');
+    b.addEventListener('click',function(){var open=r.hidden;r.hidden=!open;b.setAttribute('aria-expanded',open);b.textContent=open?'Ocultar sugerencia':'Revelar sugerencia';});
+    box.appendChild(d);
+  });
+})();
+</script>
+
+</body></html>
